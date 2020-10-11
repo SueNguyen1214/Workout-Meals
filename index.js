@@ -17,8 +17,24 @@ function getYoutubeVideo(){
 
 }
 
-//This function is to watch for the search video button
+//This function is to watch for the Yes answer of the Exercise question
 function watchSearchVideo(){
+    $('#no').on('click', (event) => {
+        event.preventDefault();
+        $('.currentDisplay').html(`
+            <p> Awesome. Would you like to know how many calories you have burned?</p>
+            <form>
+                <input id ="yesCal" type ="radio" name="calorieOption">
+                    <label for =yesCal"> Yes, please </label> <br>
+                <input id ="noCal" type ="radio" name="calorieOption">
+                    <label for =noCal"> No, I already know </label>    
+            </form>`
+        )
+    })
+    $('#yes').on('click',(event) =>{
+        event.preventDefault();
+        getYoutubeVideo();
+    })
 
 }
 
