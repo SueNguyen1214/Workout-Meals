@@ -1,42 +1,110 @@
 'use strict';
-const youtubeApiKey="";
+const youtubeApiKey="AIzaSyDkYi5rExId9p1BkHm08Iav3Wz_aotGYsI";
 const spoonApiKey="";
+const youtubeURL="https://www.googleapis.com/youtube/v3/search";
 //const STORE={} for key-value paif of type of esercise and calories burned
 
 //this function is to format the Query params for Youtube
-function formatYoutubeQueryParams(){
-
-}
+function formatYoutubeQueryParams(params){
+    const queryItem = Object.keys(params).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`);
+    return queryItem.join("&");
+};
 //this function is to display the Youtube videos
-function displayYoutube(){
-
-}
+function displayYoutube(responseJson){
+    $('.currentDisplay').html("");//to clear out the previous results
+    for (let i = 0; i < responseJson.items.length; i++) {
+        $('.currentDisplay').append(`
+        <h3>Here are your exercise video</h3>
+        <p>Would you like to know how many calories you migh be burning?</p>
+        <form>
+            <input id = "calYes" type = "radio" name = "yesToCal" value = "yes">
+            <label for = "calYes"> Yes, show me </label> <br>
+            <input id = "calNo" type = "radio" name = "noToCal" value = "no">
+            <label for = "calNo"> No, I'm good </label>
+        </form>
+        <h4>Title: ${responseJson.items[i].snippet.title}</h4>
+        <p>Description: ${responseJson.items[i].snippet.description}</p>
+        <img src = '${responseJson.items[i].snippet.thumbnails.default.url}'>        
+        `)        
+    };  
+};
 
 //This function is to fetch the videos from Youtube
-function getYoutubeVideo(){
+function getYoutubeVideo(chosenExercise,maxReturn){
+    const params = {
+        part:'snippet',
+        q:chosenExercise,
+        type:'video',
+        key:youtubeApiKey,       
+        maxReturn        
+    }
+    const paramQuery = formatYoutubeQueryParams(params);
+    console.log(paramQuery);
+    const url =  youtubeURL + "?" + paramQuery;
+    console.log(url);
+    fetch(url)
+        .then (response => {
+            if (response.ok) {
+                return response.json();
+            } throw new Error (response.statusText);
+        })
+        .then (responseJson => displayYoutube(responseJson))
+        .catch(err => {
+            $('.currentDisplay').text(`Something went wrong. ${err.message}`);
+        })
 
 }
 
-//This function is to watch for the Yes answer of the Exercise question
-function watchSearchVideo(){
-    $('#no').on('click', (event) => {
-        event.preventDefault();
-        $('.currentDisplay').html(`
-            <p> Awesome. Would you like to know how many calories you have burned?</p>
-            <form>
-                <input id ="yesCal" type ="radio" name="calorieOption">
-                    <label for =yesCal"> Yes, please </label> <br>
-                <input id ="noCal" type ="radio" name="calorieOption">
-                    <label for =noCal"> No, I already know </label>    
-            </form>`
-        )
-    })
+//This function is to watch for the answer to the Exercise question
+function watchExerciseOption(){
     $('#yes').on('click',(event) =>{
         event.preventDefault();
-        getYoutubeVideo();
+        $('.currentDisplay').html(`
+        <form id = 'workoutType'>
+            <label for = "exerciseType" >Alrighty. What kind of exercise do you have in mind ? </label>
+            <input id = "js-exerciseType" type = "text" placeholder = "Yoga, kickboxing" name="exerciseType">
+            <br>
+            <label for = "maxResult"> How many results do you want to see? </label>
+            <input id = "js-maxResult" type ="number" name = "maxResult" value = "7">
+            <button type = "submit"> Search video</button>
+        </form>`
+        )
+        watchSearchVideo();
+    });
+    $('#noWithCal').on('click', (event) =>{
+        event.preventDefault();
+        caloriesCalculation();
+    });
+    $('#noWithRec').on('click', (event) =>{
+        event.preventDefault();
+        $('.currentDisplay').html(`
+        <h4>Do you want to search for recipes based on your burned calories?</h4>
+        <form>
+            <input id = "yesCal" type = "radio" name = "calorieOption">
+            <label for = "yesCal"> Yes, that would be nice </label> <br>
+            <input id = "noWithIngredient" type = "radio" name = "calorieOption">
+            <label for = "noWithIngredient">No, I rather choose recipes with certain ingredient.</label> <br>
+            <input id ="noCal" type ="radio" name = "calorieOption">
+            <label for = "noCal"> No, thanks</label> 
+        </form>`)
     })
-
+    $('#no').on('click', (event) => {
+        event.preventDefault();
+        getRecipe();
+    })
+    
 }
+//This fuction is to watch for the Seacrh Video Button
+function watchSearchVideo(){
+    $('form').submit(event => {
+        event.preventDefault();
+        const chosenExercise = $('#js-exerciseType').val();
+        console.log(chosenExercise);
+        const maxReturn=$('#js-maxResult').val();
+        console.log(maxReturn);
+        getYoutubeVideo(chosenExercise, maxReturn);
+    });
+};
 
 
 //This function is for the calories counting part
@@ -60,6 +128,7 @@ function watchSearchRecipe(){
 
 }
 
-
-$(watchSearchVideo);
-$(watchSearchRecipe);
+function renderApp(){
+    watchExerciseOption();
+}
+$(renderApp);
