@@ -10,9 +10,11 @@ function formatYoutubeQueryParams(params){
     return queryItem.join("&");
 };
 //this function is to display the Youtube videos
-function displayYoutube(responseJson){
+function displayYoutube(responseJson, maxReturn){
     $('.currentDisplay').html("");//to clear out the previous results
-    for (let i = 0; i < responseJson.items.length; i++) {
+    for (let i = 0; i < maxReturn; i++) {
+        console.log(responseJson.items[i].id.videoId);
+        const link = `https://www.youtube.com/watch?v=${responseJson.items[i].id.videoId}`;
         $('.currentDisplay').append(`
         <h3>Here are your exercise video</h3>
         <p>Would you like to know how many calories you migh be burning?</p>
@@ -24,7 +26,10 @@ function displayYoutube(responseJson){
         </form>
         <h4>Title: ${responseJson.items[i].snippet.title}</h4>
         <p>Description: ${responseJson.items[i].snippet.description}</p>
-        <img src = '${responseJson.items[i].snippet.thumbnails.default.url}'>        
+        <a href='${link}' target='_blank'>
+            <img src = '${responseJson.items[i].snippet.thumbnails.default.url}'>
+        </a> 
+
         `)        
     };  
 };
@@ -32,11 +37,11 @@ function displayYoutube(responseJson){
 //This function is to fetch the videos from Youtube
 function getYoutubeVideo(chosenExercise,maxReturn){
     const params = {
-        part:'snippet',
+        key:youtubeApiKey, 
         q:chosenExercise,
-        type:'video',
-        key:youtubeApiKey,       
-        maxReturn        
+        part:'snippet',
+        maxReturn,
+        type:'video'             
     }
     const paramQuery = formatYoutubeQueryParams(params);
     console.log(paramQuery);
@@ -48,13 +53,19 @@ function getYoutubeVideo(chosenExercise,maxReturn){
                 return response.json();
             } throw new Error (response.statusText);
         })
-        .then (responseJson => displayYoutube(responseJson))
+        .then (responseJson => displayYoutube(responseJson,maxReturn))
         .catch(err => {
             $('.currentDisplay').text(`Something went wrong. ${err.message}`);
         })
 
 }
-
+//This function is to display the calorie screen
+function calorieScreen(){
+    $('.currentDisplay').html(`
+    <p>What type of exercise/activities have you done today?</p>
+    <p>What is the duration of the activities?</p>
+    <p>What is your current weight? </p>`)
+}
 //This function is to watch for the answer to the Exercise question
 function watchExerciseOption(){
     $('#yes').on('click',(event) =>{
@@ -73,7 +84,7 @@ function watchExerciseOption(){
     });
     $('#noWithCal').on('click', (event) =>{
         event.preventDefault();
-        caloriesCalculation();
+        calorieScreen();
     });
     $('#noWithRec').on('click', (event) =>{
         event.preventDefault();
