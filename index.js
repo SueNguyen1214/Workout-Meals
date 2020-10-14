@@ -3,40 +3,72 @@ const youtubeApiKey="AIzaSyDkYi5rExId9p1BkHm08Iav3Wz_aotGYsI";
 const spoonApiKey="";
 const youtubeURL="https://www.googleapis.com/youtube/v3/search";
 //for key-value paif of type of esercise and calories burned
-const MET={
-    aerobics: 7.3,
-    "water aerobics": 5.3,
-    badminton: 5.5,
-    "competitive badminton": 7.0,
-    ballet: 5,
-    basketball: 6.5,
-    "competitive basketball": 8.0,
-    boxing: 12.8,
-    dancing:7.8,
-    goft: 4.8,
-    gymnastics: 3.8,
-    hiking:7.8,
-    "horseback riding": 5.5,
-    jogging:7.0,
-    kickboxing: 10.3,
-    pilates:3.0,
-    racquetball: 7.0,
-    "competitive racquetball": 10.0,
-    "rope jumping": 11.8,
-    "slow run":6.0,
-    "moderate run": 11.0,
-    "fast run":16.0,
-    squats: 5.0,
-    "tai chi": 3.0,
-    tennis: 7.3,    
-    swimming: 4.0,
-    walking:9.5,
-    "weight lifting": 6.0,
-    zumba:6.5,
-    Xbox: 6.3,
-    "Hatha yoga": 2.5,
-    "Power yoga": 4.0,
-} 
+const MET=[
+    { "name":"aerobics",
+      "burnUnit": 7.3},
+    { "name":"water aerobics",
+      "burnUnit": 5.3},
+    { "name":"badminton",
+      "burnUnit": 5.5},
+    { "name":"competitive_badminton",
+      "burnUnit": 7.0},
+    { "name":"ballet",
+      "burnUnit": 5.0},
+    { "name":"basketball",
+      "burnUnit": 6.5},
+    { "name":"competitive basketball",
+      "burnUnit": 8.0},
+    { "name":"boxing",
+      "burnUnit": 12.8}, 
+    { "name":"dancing",
+      "burnUnit": 7.8}, 
+    { "name":"goft",
+      "burnUnit": 4.8},      
+    { "name":"gymnastics",
+      "burnUnit": 3.8},
+    { "name":"hiking",
+      "burnUnit": 7.8},
+    { "name":"horseback_riding",
+      "burnUnit": 5.5},
+    { "name":"jogging",
+      "burnUnit": 7.0},   
+    { "name":"kickboxing",
+      "burnUnit": 10.3}, 
+    { "name":"pilates",
+      "burnUnit":3.0}, 
+    { "name":"racquetball",
+      "burnUnit":7.0},
+    { "name":"competitive racquetball",
+      "burnUnit":10.0},
+    { "name":"rope jumping",
+      "burnUnit":11.8},
+    { "name":"slow run",
+      "burnUnit":6.0},
+    { "name":"moderate run",
+      "burnUnit":11.0},
+    { "name":"fast run",
+      "burnUnit":16.0},
+    { "name":"squats",
+      "burnUnit":5.0},
+    { "name":"tai chi",
+      "burnUnit":3.0},
+    { "name":"tennis",
+      "burnUnit":7.3},
+    { "name":"swimming",
+      "burnUnit":4.0},
+    { "name":"walking fast",
+      "burnUnit":9.5},
+    { "name":"weight lifting",
+      "burnUnit":6.0},
+    { "name":"zumba",
+      "burnUnit":6.5},
+    { "name":"Xbox exercise video game",
+      "burnUnit":6.3},
+    { "name":"hatha yoga",
+      "burnUnit":2.5},
+    { "name":"power yoga",
+      "burnUnit":4.0}
+];
 
 //this function is to format the Query params for Youtube
 function formatYoutubeQueryParams(params){
@@ -153,24 +185,25 @@ function watchSearchVideo(){
 };
 //This function is to watch for the Calculate button
 function watchCalculate(){
-    $('#submitCalorie').submit(event => {
+    $('#calorieCal').submit(event => {
         event.preventDefault();
         const exerciseDoneType = $('#js-exerciseDone').val();
         const durationDone = $('#js-duration').val();
         const weightDone = $('#js-weight').val();
-    })
-    caloriesCalculation(exerciseDoneType, durationDone, weightDone);
+        caloriesCalculation(exerciseDoneType, durationDone, weightDone);
+    });
+    
 };
 
 //This function is for the calories counting part
 function caloriesCalculation(exerciseDoneType, durationDone, weightDone){
     var result =0;
-    var weightInKg=weightDone*0.453592;
-    console.log(weightInKg);
-    for ( key in MET){
-        if (exerciseDoneType === key){
-            result += weightInKg*durationDone*MET.key;
-        }
+    var weightInKg=weightDone*0.45;
+    
+    for ( let j =0; j < MET.length; j++){
+        if (exerciseDoneType === MET[j].name){
+            result += weightInKg*durationDone*MET[j].burnUnit;
+        };
     }
     if (result === 0){
         $('.currentDisplay').html(`
