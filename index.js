@@ -1,8 +1,17 @@
 'use strict';
-const youtubeApiKey="AIzaSyDkYi5rExId9p1BkHm08Iav3Wz_aotGYsI";
-const spoonApiKey="";
+const youtubeApiKey = "AIzaSyDkYi5rExId9p1BkHm08Iav3Wz_aotGYsI";
+const spoonApiKey = "32e38887fcmsh0634843e47eb15ep1aef8cjsneb164412d0d0";
+const spoonRandomUrl = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random";
+const spoonCalorieURL ="https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/mealplans/generate";
 const youtubeURL="https://www.googleapis.com/youtube/v3/search";
-//for key-value paif of type of esercise and calories burned
+const option ={
+  "method": "GET",
+  headers: new Headers({
+    "x-rapidapi-host":"spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
+    "x-rapidapi-key":spoonApiKey
+  })
+}
+//for key-value pair of type of esercise and calories burned
 const MET=[
     { "name":"aerobics",
       "burnUnit": 7.3},
@@ -81,17 +90,15 @@ function displayYoutube(responseJson, maxResults){
      $('.currentDisplay').append(`
      <h4>Here are your exercise video.</h4>`);
     for (let i = 0; i < maxResults; i++) {
-        console.log(responseJson.items[i].id.videoId);
         const link = `https://www.youtube.com/watch?v=${responseJson.items[i].id.videoId}`;
         $('.currentDisplay').append(`
         <h4>Title: ${responseJson.items[i].snippet.title}</h4>
         <p>Description: ${responseJson.items[i].snippet.description}</p>
         <a href='${link}' target='_blank'>
             <img src = '${responseJson.items[i].snippet.thumbnails.default.url}'>
-        </a> 
-
-        `)        
+        </a><br>`)        
     };  
+    
 };
 
 //This function is to fetch the videos from Youtube
@@ -133,6 +140,18 @@ function calorieScreen(){
     </form>`)
     watchCalculate();
 }
+//This function is to display the recipe screen
+function recipeScreen(){
+    $('.currentDisplay').html(`
+        <h4>How do you want to search for your recipes?</h4>
+        <form id= 'recipeChoices'>
+            <input id = "random" type = "radio" name = "recipeOption">
+            <label for = "random">I don't have preference. Surpise me</label> <br>
+            <input id = "withCalorie" type = "radio" name = "recipeOption">
+            <label for = "withCalorie">I'm watching my calories intake.</label> <br>
+        </form>`)
+    watchRecipeChoices();
+}
 //This function is to watch for which option the users choose from the first screen
 function watchOption(){
     $('#exerciseOnly').on('click',(event) =>{
@@ -153,24 +172,11 @@ function watchOption(){
         event.preventDefault();
         calorieScreen();
     });
-    $('#noWithRec').on('click', (event) =>{
+    $('#recipeOnly').on('click', (event) =>{
         event.preventDefault();
-        $('.currentDisplay').html(`
-        <h4>Do you want to search for recipes based on your burned calories?</h4>
-        <form>
-            <input id = "yesCal" type = "radio" name = "calorieOption">
-            <label for = "yesCal"> Yes, that would be nice </label> <br>
-            <input id = "noWithIngredient" type = "radio" name = "calorieOption">
-            <label for = "noWithIngredient">No, I rather choose recipes with certain ingredient.</label> <br>
-            <input id ="noCal" type ="radio" name = "calorieOption">
-            <label for = "noCal"> No, thanks</label> 
-        </form>`)
+        recipeScreen();
+        
     })
-    $('#no').on('click', (event) => {
-        event.preventDefault();
-        getRecipe();
-    })
-    
 }
 //This fuction is to watch for the Search Video button
 function watchSearchVideo(){
@@ -207,31 +213,129 @@ function caloriesCalculation(exerciseDoneType, durationDone, weightDone){
     }
     if (result === 0){
         $('.currentDisplay').html(`
-        <p>I'm sorry. We don't have info for this type of exercise</p>`)
+        <p>I'm sorry. We don't have info for this type of exercise</p><br>
+        `)
     }else{
         $('.currentDisplay').html(`
-        <p>Here is how much calories you have burned: ${result}</p>`)
+        <p>Here is how much calories you have burned: ${result}</p><br>
+        `)
     };
-
+     
 }
 //This function is to form the query params for Spponacular
-function formatSpponQueryParams(){
+function formatSpoonQueryParams(paramsSpoon){
+  const queryItem = Object.keys(paramsSpoon).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(paramsSpoon[key])}`);
+    return queryItem.join("&");
 
 }
 //This function if to display the recipe result
-function displayRecipe(){
-
+function displayRecipe(responseJson){
+  $('.currentDisplay').html("");//To clear out previous results
+  $('.currentDisplay').append(`
+    <h3> Here are the recipes</h3>`);
+  for ( let i =0; i<responseJson.recipes.length; i++){
+    $('.currentDisplay').append(`
+    <h4>${responseJson.recipes[i].title}</h4>
+    <a href='${responseJson.recipes[i].sourceUrl}' target="_blank"><img src='${responseJson.recipes[i].image}'></a><br>
+    `)
+  };
+  
+}
+//This function is to display the recipes for calorie options
+function displayRecipeCal(responseJson){
+  $('.currentDisplay').html("");//To clear out previous results
+  $('.currentDisplay').append(`
+    <h3> Here are the recipes.</h3>
+    <p>The total calories for these reccipes are ${responseJson.nutrients.calories}</p>`);
+  for ( let i =0; i<responseJson.meals.length; i++){
+    $('.currentDisplay').append(`
+    <h4>${responseJson.meals[i].title}</h4>
+    <a href='${responseJson.meals[i].sourceUrl}' target="_blank">Link to recipe</a>
+    `)
+  };
+  
 }
 //this function is to fetch info from Spoonacular
-function getRecipe(){
-
+function getRecipe(numberResult){
+  const paramsSpoon = {
+    number:numberResult,              
+  };
+  
+  const paramQuerySpoon = formatSpoonQueryParams(paramsSpoon);
+  const spoonUrl = spoonRandomUrl+"?"+ paramQuerySpoon;
+  fetch(spoonUrl, option)
+    .then (response => {
+      if (response.ok) {
+        return response.json();
+      } throw new Error (response.statusText);
+    })
+    .then (responseJson => displayRecipe(responseJson))
+    .catch(err => {$('.currentDisplay').text(`Something went wrong. ${err.message}`)
+  });
+} 
+//This function is to retrieve recipe with calorie option
+function getRecipeCal(maxCal){
+  const paramsSpoonCal = {
+    targetCalories:maxCal,
+    timeFrame:'day'              
+  };
+  
+  const paramQuerySpoon = formatSpoonQueryParams(paramsSpoonCal);
+  const spoonUrlCal = spoonCalorieURL+"?"+ paramQuerySpoon;
+  fetch(spoonUrlCal, option)
+    .then (response => {
+      if (response.ok) {
+        return response.json();
+      } throw new Error (response.statusText);
+    })
+    .then (responseJson => displayRecipeCal(responseJson))
+    .catch(err => {$('.currentDisplay').text(`Something went wrong. ${err.message}`)
+  });
 } 
 //This function is to watch for search recipe button
-function watchSearchRecipe(){
-
+function watchRecipeChoices(){
+    $('#random').on('click', (event) =>{
+        event.preventDefault();
+        $('.currentDisplay').html(`
+        <form id = "randomRecipe">
+          <label for = "numberResult">How many recipes do you want us to return?</label>
+          <input id = "js-numberResult" type = "number" value = "5"><br>
+          <button id ="searchIngredient" type = "submit">Search Recipes</button>
+        </form>
+        `)
+        watchRandom();
+    });
+    $('#withCalorie').on('click', (event) =>{
+        event.preventDefault();
+        $('.currentDisplay').html(`
+        <form id ="calorie">
+          <label for = "selectCalorie">What is your desired maximum calories intake?</label>
+          <input id ="js-selectCalorie" type = "number" value ="1000" minimum = "200" step = "50"><br>
+          <button id ="searchCalorie" type ="submit"> Search Recipes </button>
+        </form>
+        `)
+        watchCalorie();
+    });
 }
+//This function is to watch for the Search Recipe for the ingredient option
+function watchRandom(){
+  $('#randomRecipe').submit(event =>{
+    event.preventDefault();
+    const numberResult = $ ('#js-numberResult').val();
+    getRecipe(numberResult);
+  })  
+};
+//This function is to watch for the Search Recipe for the calorie option
+function watchCalorie(){
+  $('#calorie').submit(event =>{
+    event.preventDefault();
+    const maxCal = $('#js-selectCalorie').val();
+    getRecipeCal(maxCal);
+  })
+}
+//This function is to watch the Return Home button
 
 function renderApp(){
-    watchOption();
+    watchOption();    
 }
 $(renderApp);
