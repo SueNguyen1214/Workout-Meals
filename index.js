@@ -131,7 +131,38 @@ function calorieScreen(){
     $('.currentDisplay').html(`
     <form id = "calorieCal">
         <label for = "exerciseDone">What type of exercise/activities have you done today?</label>
-        <input id = "js-exerciseDone" type = "text" placeholder = "Hatha Yoga, Power Yoga, basketball,competitive basketball"><br>
+        <select id = "exerciseDone" name = "exerciseDone">
+          <option value  = "water aerobics">water aerobics</option>
+          <option value  = "badminton">badminton</option>
+          <option value  = "competitive_badminton">competitive badminton</option>
+          <option value  = "ballet">ballet</option>
+          <option value  = "basketball">basketball</option>
+          <option value  = "competitive basketball">competitive basketball</option>
+          <option value  = "boxing">boxing</option>
+          <option value  = "dancing">dancing</option>
+          <option value  = "goft">goft</option>
+          <option value  = "gymnastics">gymnastics</option>
+          <option value  = "hiking">hiking</option>
+          <option value  = "jogging">jogging</option>
+          <option value  = "kickboxing">kickboxing</option>
+          <option value  = "pilates">pilates</option>
+          <option value  = "racquetball">racquetball</option>
+          <option value  = "competitive racquetball">competitive racquetball</option>
+          <option value  = "rope jumping">rope jumping</option>
+          <option value  = "slow run">slow run</option>
+          <option value  = "moderate run">moderate run</option>
+          <option value  = "fast run">fast run</option>
+          <option value  = "squats">squats</option>
+          <option value  = "tai chi">tai chi</option>
+          <option value  = "tennis">tennis</option>
+          <option value  = "swimming">swimming</option>
+          <option value  = "walking fast">walking fast</option>
+          <option value  = "weight lifting">weight lifting</option>
+          <option value  = "zumba">zumba</option>
+          <option value  = "Xbox exercise video game">Xbox exercise video game</option>
+          <option value  = "hatha yoga">hatha yoga</option>
+          <option value  = "power yoga">power yoga</option>
+        </select><br>
         <label for = "duration">How many hours did you exercise (partial hours please enter in quarter ( 0.25) increments?</label>
         <input id ="js-duration" type = "number" value = "1.0" step = "0.25" min = "0" ><br>
         <label for = "weight">What is your current weight in pounds? </label>
@@ -193,7 +224,8 @@ function watchSearchVideo(){
 function watchCalculate(){
     $('#calorieCal').submit(event => {
         event.preventDefault();
-        const exerciseDoneType = $('#js-exerciseDone').val();
+        const exerciseDoneType = $('#exerciseDone').find(":selected").text();
+        console.log(exerciseDoneType);
         const durationDone = $('#js-duration').val();
         const weightDone = $('#js-weight').val();
         caloriesCalculation(exerciseDoneType, durationDone, weightDone);
@@ -210,16 +242,16 @@ function caloriesCalculation(exerciseDoneType, durationDone, weightDone){
         if (exerciseDoneType === MET[j].name){
             result += weightInKg*durationDone*MET[j].burnUnit;
         };
-    }
-    if (result === 0){
-        $('.currentDisplay').html(`
-        <p>I'm sorry. We don't have info for this type of exercise</p><br>
-        `)
-    }else{
+     }
+     //if (result === 0){
+         //$('.currentDisplay').html(`
+        // <p>I'm sorry. We don't have info for this type of exercise</p><br>
+         //`)
+     //}else{
         $('.currentDisplay').html(`
         <p>Here is how much calories you have burned: ${result}</p><br>
         `)
-    };
+     //};
      
 }
 //This function is to form the query params for Spponacular
@@ -242,17 +274,22 @@ function displayRecipe(responseJson){
   
 }
 //This function is to display the recipes for calorie options
-function displayRecipeCal(responseJson){
+function displayRecipeCal(responseJson, maxCal){
   $('.currentDisplay').html("");//To clear out previous results
-  $('.currentDisplay').append(`
-    <h3> Here are the recipes.</h3>
-    <p>The total calories for these reccipes are ${responseJson.nutrients.calories}</p>`);
-  for ( let i =0; i<responseJson.meals.length; i++){
+  if (responseJson.nutrients.calories> maxCal) {
     $('.currentDisplay').append(`
-    <h4>${responseJson.meals[i].title}</h4>
-    <a href='${responseJson.meals[i].sourceUrl}' target="_blank">Link to recipe</a>
-    `)
+    <h3>Sorry your desired calories are too low. Please consider a new search with high calories number.`)
+  }else {
+    $('.currentDisplay').append(`
+      <h3> Here are the recipes.</h3>
+      <p>The total calories for these reccipes are ${responseJson.nutrients.calories}</p>`);
+    for ( let i =0; i<responseJson.meals.length; i++){
+      $('.currentDisplay').append(`
+      <h4>${responseJson.meals[i].title}</h4>
+      <a href='${responseJson.meals[i].sourceUrl}' target="_blank">Link to recipe</a>
+     `)
   };
+}
   
 }
 //this function is to fetch info from Spoonacular
@@ -288,7 +325,7 @@ function getRecipeCal(maxCal){
         return response.json();
       } throw new Error (response.statusText);
     })
-    .then (responseJson => displayRecipeCal(responseJson))
+    .then (responseJson => displayRecipeCal(responseJson, maxCal))
     .catch(err => {$('.currentDisplay').text(`Something went wrong. ${err.message}`)
   });
 } 
@@ -310,7 +347,7 @@ function watchRecipeChoices(){
         $('.currentDisplay').html(`
         <form id ="calorie">
           <label for = "selectCalorie">What is your desired maximum calories intake?</label>
-          <input id ="js-selectCalorie" type = "number" value ="1000" minimum = "200" step = "50"><br>
+          <input id ="js-selectCalorie" type = "number" value ="1000" min = "0" step = "50"><br>
           <button id ="searchCalorie" type ="submit"> Search Recipes </button>
         </form>
         `)
@@ -334,8 +371,27 @@ function watchCalorie(){
   })
 }
 //This function is to watch the Return Home button
-
+function watchHome(){
+  $('.home').on('click', (event) =>{
+    event.preventDefault();
+    $('.currentDisplay').html(`
+    <h1>Workout, Food & Thrive</h1>
+    <p> Hello there, thank you for stopping by. 
+        This app will help you start/maintain a healthy and active lifestyle with exercise and good recipes.</p>
+        <h2>What would you like to do today?</h2>
+    <form >
+      <input id = "exerciseOnly" type = "radio" name = "choice" value = "exerciseOnly">
+        <label for = "exerciseOnly">I'm looking for some exercise video</label> <br>
+      <input id = "calorieOnly" type = "radio" name = "choice" value = "calorieOnly">
+        <label for = "calorieOnly">I want to calculate the calories I've burned </label> <br>
+      <input id = "recipeOnly" type = "radio" name = "choice" value = "recipeOnly">
+        <label for = "recipeOnly">I want to search for some recipes </label> <br>
+    </form>`)
+    watchOption();
+  })
+}
 function renderApp(){
-    watchOption();    
+    watchOption();
+    watchHome();    
 }
 $(renderApp);
