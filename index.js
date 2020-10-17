@@ -243,16 +243,9 @@ function caloriesCalculation(exerciseDoneType, durationDone, weightDone){
             result += weightInKg*durationDone*MET[j].burnUnit;
         };
      }
-     //if (result === 0){
-         //$('.currentDisplay').html(`
-        // <p>I'm sorry. We don't have info for this type of exercise</p><br>
-         //`)
-     //}else{
-        $('.currentDisplay').html(`
-        <p>Here is how much calories you have burned: ${result}</p><br>
-        `)
-     //};
-     
+    $('.currentDisplay').html(`
+      <p>You have burned ${result} calories</p><br>
+    `)
 }
 //This function is to form the query params for Spponacular
 function formatSpoonQueryParams(paramsSpoon){
@@ -275,12 +268,14 @@ function displayRecipe(responseJson){
 }
 //This function is to display the recipes for calorie options
 function displayRecipeCal(responseJson, maxCal){
+  const upperLimit = maxCal+10;
+  console.log(upperLimit);
   $('.currentDisplay').html("");//To clear out previous results
-  if (responseJson.nutrients.calories> maxCal) {
+  if (responseJson.nutrients.calories> upperLimit) {
     $('.currentDisplay').append(`
     <h3>Sorry your desired calories are too low. Please consider a new search with high calories number.`)
   }else {
-    $('.currentDisplay').append(`
+    $('.currentDisplay').append(`      
       <h3> Here are the recipes.</h3>
       <p>The total calories for these reccipes are ${responseJson.nutrients.calories}</p>`);
     for ( let i =0; i<responseJson.meals.length; i++){
@@ -347,7 +342,7 @@ function watchRecipeChoices(){
         $('.currentDisplay').html(`
         <form id ="calorie">
           <label for = "selectCalorie">What is your desired maximum calories intake?</label>
-          <input id ="js-selectCalorie" type = "number" value ="1000" min = "0" step = "50"><br>
+          <input id ="js-selectCalorie" type = "number" min = "0" step = "50"><br>
           <button id ="searchCalorie" type ="submit"> Search Recipes </button>
         </form>
         `)
