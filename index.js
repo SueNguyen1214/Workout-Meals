@@ -128,46 +128,46 @@ function getYoutubeVideo(chosenExercise,maxResults = 10){
 }
 //This function is to display the calorie screen
 function calorieScreen(){
-    $('.currentDisplay').html(`
+  $('.currentDisplay').html(`
     <form id = "calorieCal">
-        <label for = "exerciseDone">What type of exercise/activities have you done today?</label>
-        <select id = "exerciseDone" name = "exerciseDone">
-          <option value  = "water aerobics">water aerobics</option>
-          <option value  = "badminton">badminton</option>
-          <option value  = "competitive_badminton">competitive badminton</option>
-          <option value  = "ballet">ballet</option>
-          <option value  = "basketball">basketball</option>
-          <option value  = "competitive basketball">competitive basketball</option>
-          <option value  = "boxing">boxing</option>
-          <option value  = "dancing">dancing</option>
-          <option value  = "goft">goft</option>
-          <option value  = "gymnastics">gymnastics</option>
-          <option value  = "hiking">hiking</option>
-          <option value  = "jogging">jogging</option>
-          <option value  = "kickboxing">kickboxing</option>
-          <option value  = "pilates">pilates</option>
-          <option value  = "racquetball">racquetball</option>
-          <option value  = "competitive racquetball">competitive racquetball</option>
-          <option value  = "rope jumping">rope jumping</option>
-          <option value  = "slow run">slow run</option>
-          <option value  = "moderate run">moderate run</option>
-          <option value  = "fast run">fast run</option>
-          <option value  = "squats">squats</option>
-          <option value  = "tai chi">tai chi</option>
-          <option value  = "tennis">tennis</option>
-          <option value  = "swimming">swimming</option>
-          <option value  = "walking fast">walking fast</option>
-          <option value  = "weight lifting">weight lifting</option>
-          <option value  = "zumba">zumba</option>
-          <option value  = "Xbox exercise video game">Xbox exercise video game</option>
-          <option value  = "hatha yoga">hatha yoga</option>
-          <option value  = "power yoga">power yoga</option>
-        </select><br>
-        <label for = "duration">How many hours did you exercise (partial hours please enter in quarter ( 0.25) increments?</label>
-        <input id ="js-duration" type = "number" value = "1.0" step = "0.25" min = "0" ><br>
-        <label for = "weight">What is your current weight in pounds? </label>
-        <input id = "js-weight" type = "number" value = "120.0" min = "5"><br>
-        <button type = "submit" id = "submitCalorie">Calculate</button>
+      <label for = "exerciseDone">What type of exercises/activities have you done today?</label>
+      <select id = "exerciseDone" name = "exerciseDone">
+        <option value  = "water aerobics">water aerobics</option>
+        <option value  = "badminton">badminton</option>
+        <option value  = "competitive_badminton">competitive badminton</option>
+        <option value  = "ballet">ballet</option>
+        <option value  = "basketball">basketball</option>
+        <option value  = "competitive basketball">competitive basketball</option>
+        <option value  = "boxing">boxing</option>
+        <option value  = "dancing">dancing</option>
+        <option value  = "goft">goft</option>
+        <option value  = "gymnastics">gymnastics</option>
+        <option value  = "hiking">hiking</option>
+        <option value  = "jogging">jogging</option>
+        <option value  = "kickboxing">kickboxing</option>
+        <option value  = "pilates">pilates</option>
+        <option value  = "racquetball">racquetball</option>
+        <option value  = "competitive racquetball">competitive racquetball</option>
+        <option value  = "rope jumping">rope jumping</option>
+        <option value  = "slow run">slow run</option>
+        <option value  = "moderate run">moderate run</option>
+        <option value  = "fast run">fast run</option>
+        <option value  = "squats">squats</option>
+        <option value  = "tai chi">tai chi</option>
+        <option value  = "tennis">tennis</option>
+        <option value  = "swimming">swimming</option>
+        <option value  = "walking fast">walking fast</option>
+        <option value  = "weight lifting">weight lifting</option>
+        <option value  = "zumba">zumba</option>
+        <option value  = "Xbox exercise video game">Xbox exercise video game</option>
+        <option value  = "hatha yoga">hatha yoga</option>
+        <option value  = "power yoga">power yoga</option>
+      </select><br>
+      <label for = "duration">How many hours did you exercise? For partial hours please enter in quarter ( 0.25) increments</label>
+      <input id ="js-duration" type = "number" value = "1.0" step = "0.25" min = "0" ><br>
+      <label for = "weight">What is your current weight in pounds? </label>
+      <input id = "js-weight" type = "number" value = "120.0" min = "5"><br>
+      <button type = "submit" id = "submitCalorie">Calculate</button>
     </form>`)
     watchCalculate();
 }
@@ -222,30 +222,27 @@ function watchSearchVideo(){
 };
 //This function is to watch for the Calculate button
 function watchCalculate(){
-    $('#calorieCal').submit(event => {
-        event.preventDefault();
-        const exerciseDoneType = $('#exerciseDone').find(":selected").text();
-        console.log(exerciseDoneType);
-        const durationDone = $('#js-duration').val();
-        const weightDone = $('#js-weight').val();
-        caloriesCalculation(exerciseDoneType, durationDone, weightDone);
-    });
-    
+  $('#calorieCal').submit(event => {
+    event.preventDefault();
+    const exerciseDoneType = $('#exerciseDone').find(":selected").text();
+    const durationDone = $('#js-duration').val();
+    const weightDone = $('#js-weight').val();
+    caloriesCalculation(exerciseDoneType, durationDone, weightDone);
+  });
 };
 
 //This function is for the calories counting part
 function caloriesCalculation(exerciseDoneType, durationDone, weightDone){
-    var result =0;
-    var weightInKg=weightDone*0.45;
-    
-    for ( let j =0; j < MET.length; j++){
-        if (exerciseDoneType === MET[j].name){
-            result += weightInKg*durationDone*MET[j].burnUnit;
-        };
-     }
-    $('.currentDisplay').html(`
-      <p>You have burned ${result} calories</p><br>
-    `)
+  var result =0;
+  var weightInKg=parseInt(weightDone)*0.45;
+  for ( let j =0; j < MET.length; j++){
+    if (exerciseDoneType === MET[j].name){
+      result += weightInKg*parseInt(durationDone)*MET[j].burnUnit;
+    };
+  }
+  $('.currentDisplay').html(`
+    <p>You have burned ${result} calories</p><br>
+  `)
 }
 //This function is to form the query params for Spponacular
 function formatSpoonQueryParams(paramsSpoon){
@@ -268,10 +265,10 @@ function displayRecipe(responseJson){
 }
 //This function is to display the recipes for calorie options
 function displayRecipeCal(responseJson, maxCal){
-  const upperLimit = maxCal+10;
-  console.log(upperLimit);
+  const upperLimit = parseInt(maxCal)+10;
+  console.log( upperLimit);
   $('.currentDisplay').html("");//To clear out previous results
-  if (responseJson.nutrients.calories> upperLimit) {
+  if (responseJson.nutrients.calories > upperLimit) {
     $('.currentDisplay').append(`
     <h3>Sorry your desired calories are too low. Please consider a new search with high calories number.`)
   }else {
@@ -341,8 +338,8 @@ function watchRecipeChoices(){
         event.preventDefault();
         $('.currentDisplay').html(`
         <form id ="calorie">
-          <label for = "selectCalorie">What is your desired maximum calories intake?</label>
-          <input id ="js-selectCalorie" type = "number" min = "0" step = "50"><br>
+          <label for = "selectCalorie">What is your desired maximum calories intake for the entire day?</label>
+          <input id ="js-selectCalorie" type = "number" min = "0" step = "10"><br>
           <button id ="searchCalorie" type ="submit"> Search Recipes </button>
         </form>
         `)

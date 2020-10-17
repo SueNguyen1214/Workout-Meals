@@ -10,6 +10,7 @@ p{
     font-family: 'Lato', sans-serif;
     font-family: 'Nova Mono', monospace;
     font-weight: 500;
+    margin: 5px;
 }
 /*sub-headers*/
 h2,h3,h4{
@@ -22,6 +23,7 @@ form {
     font-family: 'Nova Mono', monospace;
     font-family: 'Source Code Pro', monospace;
     font-size: 14px;
+    margin: 7px;
 }
 /* for buttons */
 button {
@@ -34,6 +36,8 @@ button {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    margin-top: 7px;
+    margin-bottom: 7px;
   }
   /* text field areas */
   input[type=text] {
@@ -44,12 +48,21 @@ button {
   }
   /* number field areas */
   input[type=number] {
-    width:8%;
+    width:10vw;
+    padding: 7px 25px;
+    margin: 8px 0;
+    letter-spacing: 1px;
+    box-sizing: border-box;
+  } 
+  /* option field area */
+  select {
+    width:10%;
     padding: 7px 20px;
     margin: 8px 0;
     letter-spacing: 1px;
     box-sizing: border-box;
   } 
+  
   /* background image */
   body {
     background-image: url("../images/blue_weight_set.jpg");
@@ -58,10 +71,13 @@ button {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    text-align: left
-  }
+    text-align: left;
+ }
   *{
     box-sizing:border-box;
+  }
+  form{
+      line-height: 200%;
   }
   /*Pseudo classes*/
   a:link{color:blue}
