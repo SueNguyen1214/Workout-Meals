@@ -1,4 +1,4 @@
-# workoutNMeals
+# WorkoutNMeals
 
 Link to the live app: https://suenguyen1214.github.io/WorkoutNMeals/
 
