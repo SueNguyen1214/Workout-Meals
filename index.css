@@ -1,3 +1,7 @@
+*{
+    box-sizing:border-box;
+  }
+
 /*Font areas */
 /*app title */
 h1 {
@@ -10,7 +14,9 @@ p{
     font-family: 'Lato', sans-serif;
     font-family: 'Nova Mono', monospace;
     font-weight: 500;
-    margin: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    
 }
 /*sub-headers*/
 h2,h3,h4{
@@ -72,9 +78,7 @@ button {
     background-size: cover;
     text-align: left;
  }
-  *{
-    box-sizing:border-box;
-  }
+  
   form{
       line-height: 200%;
   }
