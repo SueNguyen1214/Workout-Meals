@@ -13,117 +13,117 @@ const option ={
 }
 //for key-value pair of type of esercise and calories burned
 const MET=[
-    { "name":"aerobics",
-      "burnUnit": 7.3},
-    { "name":"water aerobics",
-      "burnUnit": 5.3},
-    { "name":"badminton",
-      "burnUnit": 5.5},
-    { "name":"competitive_badminton",
-      "burnUnit": 7.0},
-    { "name":"ballet",
-      "burnUnit": 5.0},
-    { "name":"basketball",
-      "burnUnit": 6.5},
-    { "name":"competitive basketball",
-      "burnUnit": 8.0},
-    { "name":"boxing",
-      "burnUnit": 12.8}, 
-    { "name":"dancing",
-      "burnUnit": 7.8}, 
-    { "name":"goft",
-      "burnUnit": 4.8},      
-    { "name":"gymnastics",
-      "burnUnit": 3.8},
-    { "name":"hiking",
-      "burnUnit": 7.8},
-    { "name":"horseback_riding",
-      "burnUnit": 5.5},
-    { "name":"jogging",
-      "burnUnit": 7.0},   
-    { "name":"kickboxing",
-      "burnUnit": 10.3}, 
-    { "name":"pilates",
-      "burnUnit":3.0}, 
-    { "name":"racquetball",
-      "burnUnit":7.0},
-    { "name":"competitive racquetball",
-      "burnUnit":10.0},
-    { "name":"rope jumping",
-      "burnUnit":11.8},
-    { "name":"slow run",
-      "burnUnit":6.0},
-    { "name":"moderate run",
-      "burnUnit":11.0},
-    { "name":"fast run",
-      "burnUnit":16.0},
-    { "name":"squats",
-      "burnUnit":5.0},
-    { "name":"tai chi",
-      "burnUnit":3.0},
-    { "name":"tennis",
-      "burnUnit":7.3},
-    { "name":"swimming",
-      "burnUnit":4.0},
-    { "name":"walking fast",
-      "burnUnit":9.5},
-    { "name":"weight lifting",
-      "burnUnit":6.0},
-    { "name":"zumba",
-      "burnUnit":6.5},
-    { "name":"Xbox exercise video game",
-      "burnUnit":6.3},
-    { "name":"hatha yoga",
-      "burnUnit":2.5},
-    { "name":"power yoga",
-      "burnUnit":4.0}
+  { "name":"aerobics",
+    "burnUnit": 7.3},
+  { "name":"water aerobics",
+    "burnUnit": 5.3},
+  { "name":"badminton",
+    "burnUnit": 5.5},
+  { "name":"competitive_badminton",
+    "burnUnit": 7.0},
+  { "name":"ballet",
+    "burnUnit": 5.0},
+  { "name":"basketball",
+    "burnUnit": 6.5},
+  { "name":"competitive basketball",
+    "burnUnit": 8.0},
+  { "name":"boxing",
+    "burnUnit": 12.8}, 
+  { "name":"dancing",
+    "burnUnit": 7.8}, 
+  { "name":"goft",
+    "burnUnit": 4.8},      
+  { "name":"gymnastics",
+    "burnUnit": 3.8},
+  { "name":"hiking",
+    "burnUnit": 7.8},
+  { "name":"horseback_riding",
+    "burnUnit": 5.5},
+  { "name":"jogging",
+    "burnUnit": 7.0},   
+  { "name":"kickboxing",
+    "burnUnit": 10.3}, 
+  { "name":"pilates",
+    "burnUnit":3.0}, 
+  { "name":"racquetball",
+    "burnUnit":7.0},
+  { "name":"competitive racquetball",
+    "burnUnit":10.0},
+  { "name":"rope jumping",
+    "burnUnit":11.8},
+  { "name":"slow run",
+    "burnUnit":6.0},
+  { "name":"moderate run",
+    "burnUnit":11.0},
+  { "name":"fast run",
+    "burnUnit":16.0},
+  { "name":"squats",
+    "burnUnit":5.0},
+  { "name":"tai chi",
+    "burnUnit":3.0},
+  { "name":"tennis",
+    "burnUnit":7.3},
+  { "name":"swimming",
+    "burnUnit":4.0},
+  { "name":"walking fast",
+    "burnUnit":9.5},
+  { "name":"weight lifting",
+    "burnUnit":6.0},
+  { "name":"zumba",
+    "burnUnit":6.5},
+  { "name":"Xbox exercise video game",
+    "burnUnit":6.3},
+  { "name":"hatha yoga",
+    "burnUnit":2.5},
+  { "name":"power yoga",
+    "burnUnit":4.0}
 ];
 
 //this function is to format the Query params for Youtube
 function formatYoutubeQueryParams(params){
-    const queryItem = Object.keys(params).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`);
-    return queryItem.join("&");
+  const queryItem = Object.keys(params).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`);
+  return queryItem.join("&");
 };
 //this function is to display the Youtube videos
 function displayYoutube(responseJson, maxResults){
-    $('.currentDisplay').html("");//to clear out the previous results
-     $('.currentDisplay').append(`
-     <h4>Here are your exercise video.</h4>`);
-    for (let i = 0; i < maxResults; i++) {
-        const link = `https://www.youtube.com/watch?v=${responseJson.items[i].id.videoId}`;
-        $('.currentDisplay').append(`
-        <h4>Title: ${responseJson.items[i].snippet.title}</h4>
-        <p>Description: ${responseJson.items[i].snippet.description}</p>
-        <a href='${link}' target='_blank'>
-            <img src = '${responseJson.items[i].snippet.thumbnails.default.url}'>
-        </a><br>`)        
-    };  
+  $('.currentDisplay').html("");//to clear out the previous results
+    $('.currentDisplay').append(`
+    <h4>Here are your exercise video.</h4>`);
+  for (let i = 0; i < maxResults; i++) {
+    const link = `https://www.youtube.com/watch?v=${responseJson.items[i].id.videoId}`;
+    $('.currentDisplay').append(`
+    <h4>Title: ${responseJson.items[i].snippet.title}</h4>
+    <p>Description: ${responseJson.items[i].snippet.description}</p>
+    <a href='${link}' target='_blank'>
+        <img src = '${responseJson.items[i].snippet.thumbnails.default.url}'>
+    </a><br>`)        
+  };  
     
 };
 
 //This function is to fetch the videos from Youtube
 function getYoutubeVideo(chosenExercise,maxResults = 10){
-    const params = {
-        key:youtubeApiKey, 
-        q:chosenExercise,
-        part:'snippet',
-        maxResults,
-        type:'video'             
-    };
-    const paramQuery = formatYoutubeQueryParams(params);
-    console.log(paramQuery);
-    const url =  youtubeURL + "?" + paramQuery;
-    console.log(url);
-    fetch(url)
-        .then (response => {
-            if (response.ok) {
-                return response.json();
-            } throw new Error (response.statusText);
-        })
-        .then (responseJson => displayYoutube(responseJson,maxResults))
-        .catch(err => {
-            $('.currentDisplay').text(`Something went wrong. ${err.message}`);
-        })
+  const params = {
+    key:youtubeApiKey, 
+    q:chosenExercise,
+    part:'snippet',
+    maxResults,
+    type:'video'             
+  };
+  const paramQuery = formatYoutubeQueryParams(params);
+  console.log(paramQuery);
+  const url =  youtubeURL + "?" + paramQuery;
+  console.log(url);
+  fetch(url)
+    .then (response => {
+      if (response.ok) {
+        return response.json();
+      } throw new Error (response.statusText);
+    })
+    .then (responseJson => displayYoutube(responseJson,maxResults))
+    .catch(err => {
+      $('.currentDisplay').text(`Something went wrong. ${err.message}`);
+    })
 
 }
 //This function is to display the calorie screen
@@ -173,52 +173,52 @@ function calorieScreen(){
 }
 //This function is to display the recipe screen
 function recipeScreen(){
-    $('.currentDisplay').html(`
-        <h4>How do you want to search for your recipes?</h4>
-        <form id= 'recipeChoices'>
-            <input id = "random" type = "radio" name = "recipeOption">
-            <label for = "random">I don't have preference. Surpise me</label> <br>
-            <input id = "withCalorie" type = "radio" name = "recipeOption">
-            <label for = "withCalorie">I'm watching my calories intake.</label> <br>
-        </form>`)
-    watchRecipeChoices();
+  $('.currentDisplay').html(`
+    <h4>How do you want to search for your recipes?</h4>
+    <form id= 'recipeChoices'>
+      <input id = "random" type = "radio" name = "recipeOption">
+      <label for = "random">I don't have preference. Surpise me</label> <br>
+      <input id = "withCalorie" type = "radio" name = "recipeOption">
+      <label for = "withCalorie">I'm watching my calories intake.</label> <br>
+    </form>`)
+  watchRecipeChoices();
 }
 //This function is to watch for which option the users choose from the first screen
 function watchOption(){
-    $('#exerciseOnly').on('click',(event) =>{
-        event.preventDefault();
-        $('.currentDisplay').html(`
-        <form id = 'excerciseChoice'>
-            <label for = "exerciseType" >Alrighty. What kind of exercise do you have in mind ? </label>
-            <input id = "js-exerciseType" type = "text" placeholder = "Yoga, kickboxing" name="exerciseType">
-            <br>
-            <label for = "maxResult"> How many results do you want to see? </label>
-            <input id = "js-maxResult" type ="number" name = "maxResult" value = "7">
-            <button type = "submit"> Search video</button>
-        </form>`
-        )
-        watchSearchVideo();
-    });
-    $('#calorieOnly').on('click', (event) =>{
-        event.preventDefault();
-        calorieScreen();
-    });
-    $('#recipeOnly').on('click', (event) =>{
-        event.preventDefault();
-        recipeScreen();
-        
-    })
+  $('#exerciseOnly').on('click',(event) =>{
+    event.preventDefault();
+    $('.currentDisplay').html(`
+    <form id = 'excerciseChoice'>
+      <label for = "exerciseType" >Alrighty. What kind of exercise do you have in mind ? </label>
+      <input id = "js-exerciseType" type = "text" placeholder = "Yoga, kickboxing" name="exerciseType">
+      <br>
+      <label for = "maxResult"> How many results do you want to see? </label>
+      <input id = "js-maxResult" type ="number" name = "maxResult" value = "7">
+      <button type = "submit"> Search video</button>
+    </form>`
+    )
+    watchSearchVideo();
+  });
+  $('#calorieOnly').on('click', (event) =>{
+    event.preventDefault();
+    calorieScreen();
+  });
+  $('#recipeOnly').on('click', (event) =>{
+    event.preventDefault();
+    recipeScreen();
+      
+  })
 }
 //This fuction is to watch for the Search Video button
 function watchSearchVideo(){
-    $('form').submit(event => {
-        event.preventDefault();
-        const chosenExercise = $('#js-exerciseType').val();
-        console.log(chosenExercise);
-        const maxResults=$('#js-maxResult').val();
-        console.log(maxResults);
-        getYoutubeVideo(chosenExercise, maxResults);
-    });
+  $('form').submit(event => {
+    event.preventDefault();
+    const chosenExercise = $('#js-exerciseType').val();
+    console.log(chosenExercise);
+    const maxResults=$('#js-maxResult').val();
+    console.log(maxResults);
+    getYoutubeVideo(chosenExercise, maxResults);
+  });
 };
 //This function is to watch for the Calculate button
 function watchCalculate(){
@@ -247,7 +247,7 @@ function caloriesCalculation(exerciseDoneType, durationDone, weightDone){
 //This function is to form the query params for Spponacular
 function formatSpoonQueryParams(paramsSpoon){
   const queryItem = Object.keys(paramsSpoon).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(paramsSpoon[key])}`);
-    return queryItem.join("&");
+  return queryItem.join("&");
 
 }
 //This function if to display the recipe result
